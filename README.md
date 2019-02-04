@@ -19,17 +19,5 @@ npm start
 npm run dev
 ```
 
-
-# Issues
-Please let me know about any issues you're having [here](https://github.com/mgranberri28).
-
-
 # Authors
 - Mario Granberri (https://github.com/mgranberri28)
-
-
-# License
-```
-The MIT License (MIT)
-
-```
