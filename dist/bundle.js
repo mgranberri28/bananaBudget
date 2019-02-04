@@ -97,7 +97,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
+ //Button Component
 
 const Button = props => {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -124,10 +124,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-
+ //Input element component
 
 const Input = props => {
-  //console.log(props.value);
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "form-group"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
@@ -166,80 +165,101 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class FormContainer extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       date: '',
       days: '',
       cost: ''
-    }; // let cost = 0;
-    // const userDate = this.state.date.toDateString();
-    // console.log('Date is: ', userDate);
-    // let dayOfWeek = this.state.date.getDay();
-    // console.log('dayOfWeek is: ', dayOfWeek);
-    // let daysLeft = this.state.days;
-    // console.log('daysLeft is: ', daysLeft);
-    // let numericDay = Number(userDate.slice(8, 10));
-    // // console.log(userDate.slice(0, 3));
-    // // const dayOfWeek = userDate.slice(0,3);
-    // // const numericDay = userDate.slice(8, 10);
-    // console.log('numericDay is: ', Number(numericDay));
-    // {while( daysLeft > 0 ){
-    //   // if(daysLeft > 0){
-    //     console.log('day of week on this loop is: ', dayOfWeek);
-    //     daysLeft -= 1;
-    //     if(dayOfWeek >= 1 && dayOfWeek <= 5){
-    //       if(numericDay > 0 && numericDay <= 7) cost += .05;
-    //       if(numericDay > 7 && numericDay <= 14) cost += .10;
-    //       if(numericDay > 14 && numericDay <= 21) cost += .15;
-    //       if(numericDay > 21 && numericDay <= 28) cost += .20;
-    //       if(numericDay > 28 && numericDay <= 31) cost += .25;
-    //     }
-    //     if(dayOfWeek === 5) {
-    //       dayOfWeek = 1;
-    //       daysLeft -= 2;
-    //     } 
-    // // }
-    //     console.log('-->', numericDay += 1);
-    //   console.log(cost);
-    // }};
-
-    this.handleDate = this.handleDate.bind(this); // this.onChange = this.onChange.bind(this);
-
+    };
+    this.handleDate = this.handleDate.bind(this);
     this.handleDays = this.handleDays.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleClearForm = this.handleClearForm.bind(this);
-  }
-  /* This lifecycle hook gets executed when the component mounts */
-  //  onChange(date) {
-  //   this.setState({ 
-  //     date: date,
-  //     ...prevState 
-  //   });
-  //  }
+  } // handleDate event handler
 
 
   handleDate(e) {
-    const value = e.target.value; // const date = new Date(value);
-
+    const value = e.target.value;
     this.setState(prevState => ({ ...prevState,
       date: value
     }), () => console.log(this.state.date));
-  }
+  } // handleDays event handler
+
 
   handleDays(e) {
     let value = e.target.value;
     this.setState(prevState => ({ ...prevState,
       days: value
     }), () => console.log(this.state.days));
-  }
+  } // handleFormSubmit event handler
+
 
   handleFormSubmit(e) {
     e.preventDefault();
-    let userData = this.state;
-    fetch('/create', {
+    let cost = 0; // cost after calculations 
+
+    const userDate = new Date(this.state.date); // user inputed date in Javascript format
+
+    let dayOfWeek = userDate.getDay(); // day of week (0 - 6, Sun - Sat)
+
+    let daysLeft = this.state.days; // number of days remaining after each iteration
+
+    let numericDay = Number(this.state.date.slice(3, 5)); // numeric day of month
+
+    while (daysLeft > 0) {
+      // iterate as long as user inputed days have not reached 0
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        // check if current day of week is not a weekend
+        if (numericDay > 0 && numericDay <= 7) cost += .05; // add .05 cents to cost if calender day is between 1 & 7
+
+        if (numericDay > 7 && numericDay <= 14) cost += .10; // add .10 cents to cost if calender day is between 8 & 14
+
+        if (numericDay > 14 && numericDay <= 21) cost += .15; // add .15 cents to cost if calender day is between 15 & 21
+
+        if (numericDay > 21 && numericDay <= 28) cost += .20; // add .20 cents to cost if calender day is between 22 & 28
+
+        if (numericDay > 28 && numericDay <= 31) cost += .25; // add .25 cents to cost if calender day is between  29 & 31
+
+        dayOfWeek += 1; // change to next day of week 
+
+        daysLeft -= 1; // decrement days remaining by one
+
+        numericDay += 1; // increment to next calendar day
+      } else if (dayOfWeek === 0) {
+        // if day of week is sunday
+        daysLeft -= 1; // decrement days reamining by one
+
+        numericDay += 1; //increment to next calendar day
+
+        dayOfWeek += 1; //change day of week to monday
+      } else if (dayOfWeek === 6) {
+        // if day of week is saturday
+        daysLeft -= 1; // decrement days reamining by one
+
+        dayOfWeek = 0; // change day of week to sunday
+
+        numericDay += 1; //increment to next calendar day
+      }
+    }
+
+    ;
+    this.setState(prevState => {
+      // update date and cost in state
+      return { ...prevState,
+        date: new Date(prevState.date),
+        cost: cost.toFixed(2)
+      };
+    }); // fetch request to post updated state
+
+    fetch('http://localhost:3003/create', {
       method: "POST",
-      body: JSON.stringify(userData),
+      body: JSON.stringify({
+        date: userDate,
+        days: this.state.days,
+        cost: cost.toFixed(2)
+      }),
+      mode: "cors",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -249,72 +269,8 @@ class FormContainer extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         console.log("Successful" + data);
       });
     });
-    let cost = 0;
-    let userDate = new Date(this.state.date); // console.log('Date is: ', userDate);
-    // console.log(this.state.date.setDate(userDate.getDate() + 1));
+  } // handleClearForm event handler
 
-    let dayOfWeek = userDate.getDay(); // console.log('dayOfWeek is: ', dayOfWeek);
-
-    let daysLeft = this.state.days; // console.log('daysLeft is: ', daysLeft);
-
-    let numericDay = Number(this.state.date.slice(3, 5)); // console.log('numericDay is: ', Number(numericDay));
-
-    {
-      while (daysLeft > 0) {
-        console.log('day of week on this loop is: ', dayOfWeek);
-        console.log('numericDay is:', numericDay);
-        console.log('daysLeft ==', daysLeft);
-        console.log('cost is:', cost);
-
-        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-          if (numericDay > 0 && numericDay <= 7) cost += .05;
-          if (numericDay > 7 && numericDay <= 14) cost += .10;
-          if (numericDay > 14 && numericDay <= 21) cost += .15;
-          if (numericDay > 21 && numericDay <= 28) cost += .20;
-          if (numericDay > 28 && numericDay <= 31) cost += .25;
-          dayOfWeek += 1;
-          daysLeft -= 1;
-          numericDay += 1;
-        } else if (dayOfWeek === 0) {
-          daysLeft -= 1;
-          numericDay += 1;
-          dayOfWeek += 1;
-        } else if (dayOfWeek === 6) {
-          daysLeft -= 1;
-          dayOfWeek = 0;
-          numericDay += 1;
-        } // if(daysLeft > 0){
-        //     console.log('day of week on this loop is: ', dayOfWeek);
-        //     daysLeft -= 1;
-        //     if(dayOfWeek >= 1 && dayOfWeek <= 5){
-        //       if(numericDay > 0 && numericDay <= 7) cost += .05;
-        //       if(numericDay > 7 && numericDay <= 14) cost += .10;
-        //       if(numericDay > 14 && numericDay <= 21) cost += .15;
-        //       if(numericDay > 21 && numericDay <= 28) cost += .20;
-        //       if(numericDay > 28 && numericDay <= 31) cost += .25;
-        //     }
-        //     if(dayOfWeek === 5) {
-        //       dayOfWeek = 1;
-        //       daysLeft -= 2;
-        //     }else {
-        //        dayOfWeek += 1;
-        //     }
-        // // }
-        //     numericDay += 1;
-        //     console.log('numericDay-->', numericDay += 1);
-        //   console.log('cost is:', cost);
-        //   // console.log('next day ---> ', userDate.setDate(userDate.getDate() + 1));
-
-      }
-    }
-    ;
-    this.setState(prevState => {
-      return { ...prevState,
-        date: new Date(prevState.date),
-        cost: cost.toFixed(2)
-      };
-    }); // userDate = userDate.setDate(userDate.getDate() + 1);
-  }
 
   handleClearForm(e) {
     e.preventDefault();
@@ -336,24 +292,24 @@ class FormContainer extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       value: this.state.date,
       placeholder: "Enter Date MM/DD/YY",
       handleChange: this.handleDate
-    }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Input__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Input__WEBPACK_IMPORTED_MODULE_1__["default"], {
       inputType: "text",
       name: "days",
       title: "Number of Days",
       value: this.state.days,
       placeholder: "Enter number of days",
       handleChange: this.handleDays
-    }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
       action: this.handleFormSubmit,
       type: "primary",
       title: "Submit",
       style: buttonStyle
-    }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
       action: this.handleClearForm,
       type: "primary",
       title: "Clear",
       style: buttonStyle
-    }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-md-6"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Total Cost: ", this.state.cost, " ")));
   }
