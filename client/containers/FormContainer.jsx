@@ -55,10 +55,7 @@ class FormContainer extends Component {
     let numericDay = Number(this.state.date.slice(3, 5)); // numeric day of month
 
     while( daysLeft > 0 ) { // iterate as long as user inputed days have not reached 0
-    //  console.log('month is ', month)
-     console.log('days this month is ',this.state.months[month])
-     console.log('new month is ', month)
-    console.log('calendar day is ', numericDay);
+    
       if(dayOfWeek !== 0 && dayOfWeek !== 6) { // check if current day of week is not a weekend
 
         if(numericDay > 0 && numericDay <= 7) cost += .05; // add .05 cents to cost if calender day is between 1 & 7
@@ -71,14 +68,12 @@ class FormContainer extends Component {
 
         if(numericDay > 28 && numericDay <= 31) cost += .25; // add .25 cents to cost if calender day is between  29 & 31
 
-        if(numericDay > this.state.months[month]){
+        if(numericDay > this.state.months[month]){ // continue to next month 
+         
           month += 1;
-          console.log('new month is ', month)
+          
           numericDay = 0;
         }
-
-        
-
 
         dayOfWeek += 1; // change to next day of week 
 
@@ -102,25 +97,7 @@ class FormContainer extends Component {
 
       numericDay += 1; //increment to next calendar day
       }
-
-      // if(numericDay === this.state.months[month]){
-      //   // month += 1;
-      //   console.log('new month is ', month)
-      //   numericDay =+;
-      // }
-      
-      // if(numericDay > this.state.months[month]){
-      //   month += 1;
-      //   console.log('new month is ', month)
-      //   numericDay = 1;
-      // }
-
-      
     };
-    console.log('day is')
-    console.log('new month is ', month)
-    console.log('calendar day is ', numericDay);
-  
 
     this.setState((prevState) => { // update date and cost in state
       return {
